@@ -1,0 +1,6 @@
+# رازها
+.env*
+
+# سیستم
+.DS_Store
+Thumbs.db

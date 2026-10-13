@@ -1,0 +1,1313 @@
+/* ==========================================================================
+   ویرا بنیان آپادانا — استایل‌شیت اصلی
+   پالت و قواعد بصری از بروشور رسمی شرکت گرفته شده است.
+   ========================================================================== */
+
+/* ---------- ۰. فونت ---------- */
+
+/* IRANYekanX از پوشهٔ fonts خودِ سایت؛ دیگر به گوگل‌فونت و اینترنت وصل نمی‌شویم.
+   فقط سه وزنی بار می‌شود که سایت واقعاً استفاده می‌کند (هرکدام حدود ۲۷ کیلوبایت).
+   اگر جایی وزن دیگری خواستید، فایلش در fonts/woff2 هست و کافی است یک بلوک
+   @font-face مثل این‌ها برایش اضافه کنید. */
+@font-face {
+  font-family: IRANYekanX;
+  src: url("fonts/woff2/IRANYekanX-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: IRANYekanX;
+  src: url("fonts/woff2/IRANYekanX-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: IRANYekanX;
+  src: url("fonts/woff2/IRANYekanX-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------- ۱. متغیرها ---------- */
+
+:root {
+  /* پالت پایه — به این‌ها رنگ جدید اضافه نکنید */
+  --navy:   #02376D;
+  --teal:   #207584;
+  --yellow: #FFD400;
+  --ink:    #011C3D;
+  --paper:  #F3F6FA;
+  --mist:   #B9CBDD;
+
+  /* مشتق‌های مجاز (فقط شفافیت روی همان رنگ‌های بالا) */
+  --navy-soft:  rgba(2, 55, 109, .72);   /* متن ثانویه روی زمینهٔ روشن */
+  --rule-light: rgba(2, 55, 109, .14);   /* خط مویی روی زمینهٔ روشن */
+  --rule-dark:  rgba(255, 255, 255, .12);/* خط مویی روی زمینهٔ تیره */
+  --rule-teal:  rgba(255, 255, 255, .20);
+
+  /* متن ثانویه: روی teal باید روشن‌تر از --mist باشد تا کنتراست ۴.۵ حفظ شود */
+  --muted: var(--mist);
+  --focus: var(--yellow);
+
+  --wrap: 1180px;
+  --measure: 62ch;
+  --header-h: 76px;
+
+  --ease: cubic-bezier(.22, .61, .36, 1);
+  /* کمی از مقصد رد می‌شود و برمی‌گردد — شبیه spring در framer-motion */
+  --spring: cubic-bezier(.34, 1.36, .64, 1);
+}
+
+/* ---------- ۲. ریست ---------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--navy);
+  font-family: IRANYekanX, Tahoma, system-ui, sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.9;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, svg, iframe { display: block; max-width: 100%; }
+img { height: auto; }
+
+h1, h2, h3 {
+  font-weight: 300;
+  line-height: 1.4;
+  margin: 0;
+  text-wrap: balance;
+}
+
+p { margin: 0; }
+ul, ol, dl { margin: 0; padding: 0; list-style: none; }
+
+a { color: inherit; text-decoration: none; }
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+address { font-style: normal; }
+
+/* ---------- ۳. دسترس‌پذیری ---------- */
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.skip-link {
+  position: fixed;
+  inset-block-start: 8px;
+  inset-inline-start: 8px;
+  z-index: 200;
+  padding: .7rem 1.2rem;
+  background: var(--yellow);
+  color: var(--ink);
+  font-weight: 500;
+  transform: translateY(-160%);
+  transition: transform .2s var(--ease);
+}
+.skip-link:focus { transform: none; }
+
+/* متنی که فقط صفحه‌خوان می‌خواند */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
+  border: 0;
+}
+
+/* ---------- ۴. چیدمان ---------- */
+
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: 22px;
+}
+
+.section {
+  padding-block: clamp(64px, 9vw, 118px);
+  scroll-margin-top: calc(var(--header-h) + 8px);
+}
+
+.section--light {
+  background: var(--paper);
+  color: var(--navy);
+  --muted: var(--navy-soft);
+  --rule: var(--rule-light);
+  --focus: var(--navy);
+}
+
+.section--teal {
+  background: var(--teal);
+  color: #fff;
+  /* روی فیروزه‌ای، --mist کنتراست ۴.۵ نمی‌دهد؛ سفیدِ کم‌رمق جایگزین می‌شود */
+  --muted: rgba(255, 255, 255, .90);
+  --rule: var(--rule-teal);
+  --focus: var(--yellow);
+}
+
+.section--ink {
+  background: var(--ink);
+  color: #fff;
+  --muted: var(--mist);
+  --rule: var(--rule-dark);
+  --focus: var(--yellow);
+}
+
+/* عنوان بخش + نقطهٔ زرد امضای بروشور */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: .62em;
+  font-size: clamp(1.7rem, 3.6vw, 2.6rem);
+  letter-spacing: -.01em;
+}
+.section-title::before {
+  content: "";
+  flex: none;
+  width: .30em;
+  height: .30em;
+  border-radius: 50%;
+  background: var(--yellow);
+}
+
+.section-lede {
+  max-width: var(--measure);
+  margin-block-start: 1rem;
+  color: var(--muted);
+}
+
+/* ---------- ۵. دکمه‌ها ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: .78rem 1.9rem;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.6;
+  border: 2px solid transparent;
+  transition: background-color .18s var(--ease),
+              color .18s var(--ease),
+              border-color .18s var(--ease);
+}
+
+.btn--yellow {
+  background: var(--yellow);
+  color: var(--ink);          /* متن روی زرد همیشه سرمه‌ای تیره */
+  border-color: var(--yellow);
+}
+.btn--yellow:hover { background: #ffdf3d; border-color: #ffdf3d; }
+
+.btn--ghost {
+  border-color: currentColor;
+  color: inherit;
+}
+.btn--ghost:hover { background: rgba(255, 255, 255, .12); }
+.section--light .btn--ghost:hover { background: rgba(2, 55, 109, .07); }
+
+.btn--sm { padding: .42rem 1.05rem; font-size: .92rem; }
+
+/* نشانی لاتین داخل متن فارسی، بدون جداسازی دوجهته جابه‌جا می‌شود.
+   فاصله روی inline-end است نه inline-start: جهتِ خودِ این span چپ‌به‌راست
+   است، پس لبهٔ end آن همان جایی است که به متن فارسی می‌چسبد. */
+.ltr {
+  direction: ltr;
+  unicode-bidi: isolate;
+  margin-inline-end: .45rem;
+}
+
+/* ---------- ۶. هدر ---------- */
+
+/* سه حالت دارد:
+   - بدون کلاس : نوار سرمه‌ای مات تمام‌عرض
+   - is-top     : بالای صفحه، شفاف روی هیرو
+   - is-floating: بعد از اسکرول جمع می‌شود و کپسول شیشه‌ای شناور می‌شود
+   پیش‌فرض عمداً مات است: اگر JS نرسید یا خاموش بود، هدر خوانا می‌ماند
+   و متن سفیدش هیچ‌وقت روی بخش روشن نمی‌افتد.
+   الگوی کپسول و نشانگر لغزان از Floating Header و Nav Header در 21st.dev
+   گرفته و بدون React/Tailwind بازنویسی شده است. */
+.site-header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 100;
+  /* کپسول کوتاه‌تر می‌شود ولی جای هدر ثابت می‌ماند تا صفحه موقع اسکرول نپرد */
+  min-height: var(--header-h);
+  background: var(--navy);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .10);
+  transition: background-color .25s var(--ease), box-shadow .25s var(--ease);
+}
+
+.site-header.is-top,
+.site-header.is-floating {
+  background: transparent;
+  box-shadow: none;
+}
+
+/* نوار شفاف دور کپسول نباید کلیک روی محتوای زیرش را بگیرد */
+.site-header.is-floating { pointer-events: none; }
+.site-header.is-floating .header-inner { pointer-events: auto; }
+
+.header-inner {
+  position: relative;
+  inset-block-start: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: var(--header-h);
+  color: #fff;
+  transition: max-width .5s var(--ease),
+              min-height .5s var(--ease),
+              padding .5s var(--ease),
+              inset-block-start .5s var(--ease),
+              border-radius .5s var(--ease);
+}
+
+/* شیشهٔ کپسول روی شبه‌عنصر است نه خودِ کادر: backdrop-filter روی کادر،
+   منوی تمام‌صفحهٔ موبایل (position: fixed) را داخل همان کپسول زندانی می‌کرد. */
+.header-inner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: 1px solid transparent;
+  border-radius: inherit;
+  transition: background-color .35s var(--ease),
+              border-color .35s var(--ease),
+              box-shadow .35s var(--ease);
+}
+
+.site-header.is-floating .header-inner {
+  inset-block-start: 8px;
+  max-width: 880px;
+  min-height: 60px;
+  padding-inline: 18px 8px;
+  border-radius: 30px;
+}
+.site-header.is-floating .header-inner::before {
+  /* ۸۲٪ سرمه‌ای: روی بخش روشن هم متن سفید کنتراست بالای ۶:۱ دارد */
+  background: rgba(2, 55, 109, .82);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
+  border-color: rgba(255, 255, 255, .14);
+  box-shadow: 0 14px 34px -14px rgba(1, 28, 61, .6);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .site-header.is-floating .header-inner::before { background: rgba(2, 55, 109, .97); }
+}
+
+.brandmark {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  flex: none;
+}
+/* لوگوی رسمی (assets/logo-wira.png) فیروزه‌ای است و روی هدر و فوتر تیره دیده نمی‌شود؛
+   فیلتر سفیدش می‌کند. اگر فایل لوگو عوض شد، همین‌جا باز سفید می‌ماند. */
+.brandmark-logo {
+  display: block;
+  width: auto;
+  height: 44px;
+  filter: brightness(0) invert(1);
+}
+
+.brandmark--footer {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .8rem;
+}
+.brandmark--footer .brandmark-logo { height: 58px; }
+.brandmark-slogan {
+  font-style: normal;
+  font-size: .68rem;
+  font-weight: 500;
+  letter-spacing: .3em;
+  color: var(--yellow);
+}
+
+.site-nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+.site-nav > ul {
+  display: flex;
+  align-items: center;
+  gap: .15rem;
+}
+.site-nav a { font-size: .98rem; }
+.site-nav > ul a {
+  position: relative;
+  z-index: 1;
+  display: block;
+  padding: .38rem 1.05rem;
+  border-radius: 999px;
+  transition: background-color .18s var(--ease), color .2s var(--ease);
+}
+/* بدون JS نشانگر لغزان ساخته نمی‌شود؛ یک پس‌زمینهٔ ساده جایش را می‌گیرد */
+.site-nav:not(.has-cursor) > ul a:hover { background: rgba(255, 255, 255, .12); }
+/* متن روی زرد همیشه سرمه‌ای تیره */
+.site-nav > ul a.is-under-cursor { color: var(--ink); }
+
+/* کپسول زردی که با موس زیر لینک‌ها می‌لغزد. موقعیتش را JS می‌دهد. */
+.nav-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--w, 0);
+  height: var(--h, 0);
+  transform: translate(var(--x, 0), var(--y, 0));
+  border-radius: 999px;
+  background: var(--yellow);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform .45s var(--spring),
+              width .45s var(--spring),
+              opacity .2s var(--ease);
+}
+.nav-cursor.is-visible { opacity: 1; }
+/* از حالت پنهان، بدون لغزیدن همان‌جا ظاهر شود */
+.nav-cursor.is-instant { transition: opacity .2s var(--ease); }
+
+.header-phone { border-radius: 999px; }
+
+.nav-toggle { display: none; }
+
+/* ---------- ۷. لودر و هیرو ---------- */
+
+/* لودر پیش‌فرض پنهان است و فقط با کلاس is-loading (که اسکریپت کوچک داخل head
+   می‌دهد) دیده می‌شود؛ پس بدون JS هرگز جلوی صفحه را نمی‌گیرد.
+   زمینه‌اش عین هیرو است تا کنار رفتنش یک ادامهٔ نرم باشد نه یک پرش. */
+.page-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.3rem;
+  background:
+    radial-gradient(ellipse 75% 65% at 50% 50%, transparent 35%, rgba(1, 28, 61, .38) 100%),
+    var(--teal);
+  color: #fff;
+  transition: opacity .6s var(--ease), visibility .6s var(--ease);
+}
+.is-loading .page-loader {
+  display: flex;
+  /* اگر script.js به هر دلیلی نرسید، لودر خودش بعد از ۶ ثانیه کنار می‌رود */
+  animation: loader-failsafe .6s var(--ease) 6s forwards;
+}
+.page-loader.is-done {
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+}
+@keyframes loader-failsafe { to { opacity: 0; visibility: hidden; pointer-events: none; } }
+
+.mobius-loop {
+  width: 64px;
+  height: 64px;
+  overflow: visible;
+  fill: none;
+  stroke: var(--yellow);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform .6s var(--ease);
+}
+.page-loader.is-done .mobius-loop { transform: scale(.8); }
+
+.page-loader-name {
+  font-size: .7rem;
+  font-weight: 500;
+  letter-spacing: .34em;
+  color: rgba(255, 255, 255, .92);
+  animation: loader-breathe 1.5s ease-in-out infinite alternate;
+}
+@keyframes loader-breathe { from { opacity: .45; } }
+
+/* تا لودر کنار نرفته، انیمیشن‌های ورود هیرو (حتی تأخیرشان) متوقف می‌مانند.
+   important لازم است: shorthand «animation» در قواعد هیرو این ویژگی را به running برمی‌گرداند. */
+.is-loading .hero * { animation-play-state: paused !important; }
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  /* سایهٔ لبه‌ها از همان --ink با شفافیت؛ رنگ جدیدی اضافه نشده */
+  background:
+    radial-gradient(ellipse 75% 65% at 50% 50%, transparent 35%, rgba(1, 28, 61, .38) 100%),
+    var(--teal);
+  color: #fff;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  margin-block-start: calc(var(--header-h) * -1);
+  padding-block: calc(var(--header-h) + 48px) 64px;
+  --focus: var(--yellow);
+}
+
+/* پس‌زمینهٔ بی‌نهایت‌های متحرک — JS می‌سازدش.
+   الگو از Animated Infinity Background در 21st.dev، بدون framer-motion.
+   هر خط یک منحنی سادهٔ بی‌نهایت است در اندازه‌ای دیگر. */
+.hero-loops {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  pointer-events: none;
+  /* خطوط زیر عنوان به هم می‌رسند؛ وسط کم‌رنگ می‌شود تا متن خوانا بماند */
+  -webkit-mask-image: radial-gradient(ellipse 34% 44% at 50% 55%, rgba(0, 0, 0, .10) 35%, #000 100%);
+  mask-image: radial-gradient(ellipse 34% 44% at 50% 55%, rgba(0, 0, 0, .10) 35%, #000 100%);
+}
+
+/* هالهٔ هم‌رنگ زمینه دور حروف: خطوط پس‌زمینه پشت متن محو می‌شوند و روی حروف نمی‌افتند */
+.hero-title,
+.hero-latin,
+.hero-lede {
+  text-shadow: 0 0 6px var(--teal), 0 0 14px var(--teal), 0 0 26px var(--teal);
+}
+.hero-loops path {
+  fill: none;
+  stroke: #fff;
+  /* ضخامت در واحد viewBox است و هر نسخه مقیاس خودش را دارد؛ تقسیم بر مقیاس،
+     ضخامت همهٔ نسخه‌ها را روی صفحه یکسان نگه می‌دارد */
+  stroke-width: calc(var(--sw, 1) / var(--s, 1));
+  stroke-opacity: var(--o, .2);
+}
+.hero-loops path.is-accent {
+  stroke: var(--yellow);
+  stroke-width: calc(var(--sw, 1) * 1.6 / var(--s, 1));
+}
+
+/* هر خط کشیده می‌شود، مکث می‌کند، از سرِ شروع پاک می‌شود و دوباره.
+   pathLength="1" روی هر مسیر است، پس ۱ یعنی کل طول. */
+.hero-loops.is-live path {
+  stroke-dasharray: 1 1;
+  animation: loop-flow var(--dur, 10s) var(--ease) var(--delay, 0s) infinite backwards;
+}
+.hero-loops.is-paused path { animation-play-state: paused; }
+
+@keyframes loop-flow {
+  0%   { stroke-dashoffset: 1;  opacity: 0; }
+  12%  { opacity: 1; }
+  45%  { stroke-dashoffset: 0;  opacity: 1; }
+  70%  { stroke-dashoffset: 0;  opacity: 1; }
+  100% { stroke-dashoffset: -1; opacity: 0; }
+}
+
+/* ورود متن‌ها — فقط وقتی JS کلاس is-revealing را بدهد؛ بدون JS همه‌چیز سر جایش است.
+   fill-mode: backwards یعنی تا نوبتش نرسیده پنهان است و بعد به حالت عادی برمی‌گردد. */
+.hero.is-revealing .reveal-word {
+  display: inline-block;
+  animation: word-in .9s var(--spring) backwards;
+  animation-delay: calc(350ms + var(--i, 0) * 110ms);
+}
+.hero.is-revealing .hero-latin   { animation: tracking-in 1.1s var(--ease) .8s backwards; }
+.hero.is-revealing .hero-slogan  { animation: rise-in .8s var(--ease) 1.2s backwards; }
+.hero.is-revealing .hero-lede    { animation: rise-in .8s var(--ease) 1.35s backwards; }
+.hero.is-revealing .hero-actions { animation: rise-in .8s var(--ease) 1.5s backwards; }
+
+@keyframes word-in {
+  from { opacity: 0; transform: translateY(.45em); filter: blur(10px); }
+}
+@keyframes tracking-in {
+  from { opacity: 0; letter-spacing: .9em; filter: blur(6px); }
+}
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(18px); }
+}
+
+.hero-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* نماد روبانی لوگو — viewBox حدوداً ۱.۷ به ۱ است */
+.hero-infinity {
+  width: clamp(180px, 26vw, 270px);
+  height: auto;
+  overflow: visible;
+  margin-block-end: 2.4rem;
+}
+.hero-infinity path {
+  fill: #fff;
+  stroke: #fff;
+  stroke-width: 3;          /* واحد viewBox؛ در اندازهٔ نمایش حدود ۱ پیکسل */
+  stroke-linejoin: round;
+}
+
+/* انیمیشن فقط وقتی JS کلاس را اضافه کند؛ بدون JS نشان کامل دیده می‌شود.
+   اول دورِ هر تکهٔ روبان کشیده می‌شود، بعد داخلش پر می‌شود.
+   pathLength="1" روی هر تکه است، پس ۱ یعنی کل دورش. */
+.hero-infinity.is-drawing path {
+  stroke-dasharray: 1 1;
+  animation: mark-outline 1.3s var(--ease) backwards,
+             mark-fill .7s var(--ease) backwards;
+  animation-delay: calc(var(--i, 0) * 120ms),
+                   calc(1s + var(--i, 0) * 120ms);
+}
+
+@keyframes mark-outline { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes mark-fill    { from { fill-opacity: 0; } }
+
+.hero-title {
+  font-size: clamp(2.1rem, 6vw, 4rem);
+  letter-spacing: -.02em;
+}
+
+.hero-latin {
+  /* هنگام باز شدن فاصلهٔ حروف، خط نشکند و محتوای زیرش بالا-پایین نپرد */
+  white-space: nowrap;
+  margin-block-start: .7rem;
+  font-size: clamp(.82rem, 1.9vw, 1.05rem);
+  font-weight: 300;
+  letter-spacing: .34em;
+  color: rgba(255, 255, 255, .92);
+}
+
+.hero-slogan {
+  margin-block-start: 1.5rem;
+  padding-block-end: .45rem;
+  font-size: .78rem;
+  font-weight: 500;
+  letter-spacing: .30em;
+  color: var(--yellow);
+  border-block-end: 2px solid var(--yellow);
+}
+
+.hero-lede {
+  max-width: 46ch;
+  margin-block-start: 2.2rem;
+  color: rgba(255, 255, 255, .90);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .9rem;
+  margin-block-start: 2.5rem;
+}
+
+/* ---------- ۸. دربارهٔ ما ---------- */
+
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3.2rem 4rem;
+  margin-block-start: 3.4rem;
+}
+
+.about-block h3 {
+  font-size: 1.22rem;
+  font-weight: 500;
+  padding-block-end: .9rem;
+  margin-block-end: 1rem;
+  border-block-end: 1px solid var(--rule);
+}
+.about-block p {
+  max-width: var(--measure);
+  color: var(--muted);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-block-start: 4.2rem;
+  border-block-start: 1px solid var(--rule);
+}
+.stat {
+  padding: 2.1rem 1.6rem;
+  border-inline-start: 1px solid var(--rule);
+}
+.stat:first-child { border-inline-start: 0; }
+.stat dt {
+  font-size: .93rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.stat dd {
+  margin: .5rem 0 0;
+  font-size: clamp(1.9rem, 4vw, 2.7rem);
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+/* ---------- ۹. پیام مدیرعامل ---------- */
+
+.ceo-quote {
+  max-width: var(--measure);
+  margin: 2.8rem 0 0;
+  padding-inline-start: 1.6rem;
+  border-inline-start: 2px solid var(--yellow);
+  display: grid;
+  gap: 1.15rem;
+}
+.ceo-quote p { color: rgba(255, 255, 255, .93); }
+
+.ceo-sign {
+  display: flex;
+  align-items: baseline;
+  gap: .8rem;
+  margin-block-start: 2rem;
+  padding-inline-start: 1.6rem;
+}
+.ceo-sign b { font-weight: 500; }
+.ceo-sign span { font-size: .92rem; color: var(--muted); }
+
+/* ---------- ۱۰. زیربرندها ---------- */
+
+.brand-list {
+  margin-block-start: 3.2rem;
+  border-block-start: 1px solid var(--rule);
+}
+
+.brand-row {
+  --brand-color: var(--mist);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1.8rem;
+  padding: 1.7rem 1.5rem 1.7rem 0;
+  border-block-end: 1px solid var(--rule);
+  border-inline-start: 0;
+  /* خط عمودی رنگ برند روی لبهٔ سمت راست (شروع خط در RTL) */
+  box-shadow: inset -3px 0 0 0 var(--brand-color);
+  transition: background-color .2s var(--ease), box-shadow .2s var(--ease);
+}
+.brand-row:hover {
+  background: rgba(2, 55, 109, .045);
+  box-shadow: inset -6px 0 0 0 var(--brand-color);
+}
+
+/* لوگوهای تحویلی نشانِ مربع نیستند؛ لوگوتایپ افقی‌اند (نسبت ۱.۳ تا ۴.۴).
+   جعبهٔ ثابت نگهشان می‌دارد تا ستون مرتب و مقیاس همه یکسان بماند.
+   این بخش عمداً زمینهٔ روشن دارد: بیشتر لوگوها سرمه‌ای تیره‌اند و روی
+   زمینهٔ تیره دیده نمی‌شدند. حالا بدون هیچ قابی می‌نشینند. */
+.brand-logo {
+  --logo-w: 148px;
+  --logo-h: 64px;
+  position: relative;
+  flex: none;
+  width: var(--logo-w);
+  height: var(--logo-h);
+  display: grid;
+  place-items: center;
+}
+/* سقف بر حسب پیکسل، نه درصد: «max-height: 100%» داخل grid حل نمی‌شود و
+   لوگوهای نزدیک به مربع از جعبه بیرون می‌زدند، در حالی که max-width اثر
+   می‌کرد — برای همین فقط لوگوهای دوطبقه بزرگ می‌افتادند. */
+.brand-logo img {
+  max-width: var(--logo-w);
+  max-height: var(--logo-h);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+.brand-monogram {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.brand-name {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 0;
+}
+.brand-name .brand-latin {
+  font-size: .78rem;
+  font-weight: 300;
+  letter-spacing: .12em;
+  color: var(--muted);
+  margin-inline-start: .6rem;
+}
+.brand-tagline {
+  margin-block-start: .3rem;
+  max-width: 58ch;
+  font-size: .96rem;
+  color: var(--muted);
+}
+
+.brand-links {
+  display: flex;
+  align-items: center;
+  gap: 1.3rem;
+  flex: none;
+}
+.brand-links a {
+  font-size: .93rem;
+  padding-block-end: .2rem;
+  border-block-end: 1px solid rgba(2, 55, 109, .28);
+  transition: border-color .18s var(--ease), color .18s var(--ease);
+  white-space: nowrap;
+}
+/* زرد روی زمینهٔ روشن خوانا نیست — فیروزه‌ای جایش را می‌گیرد */
+.brand-links a:hover { color: var(--teal); border-block-end-color: var(--teal); }
+/* آی‌دی اینستاگرام لاتین است؛ بدون جداسازی دوجهته، @ به آخر پرتاب می‌شود */
+.brand-links .brand-ig {
+  color: var(--muted);
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* برندهایی که هنوز داده‌شان نرسیده — فقط نام، بدون ادعای جعلی */
+.brand-more {
+  margin-block-start: 3rem;
+  padding-block-start: 2.2rem;
+  border-block-start: 1px solid var(--rule);
+}
+.brand-more h3 {
+  font-size: .95rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+.brand-more-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .7rem 1.9rem;
+  margin-block-start: 1.1rem;
+}
+.brand-more-list li {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  font-size: 1rem;
+}
+.brand-more-list li::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--yellow);
+}
+/* این برندها لوگو دارند ولی توضیح ندارند — لوگو جای نقطهٔ زرد می‌نشیند */
+.brand-more-list li.has-logo::before { display: none; }
+/* جعبهٔ هم‌اندازه تا لوگوهای نوار پایین در یک خط مرتب بنشینند */
+.brand-more-list li img {
+  width: 88px;
+  height: 36px;
+  object-fit: contain;
+}
+
+/* ---------- ۱۱. اعتبارنامه ---------- */
+
+.cred-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-block-start: 3.4rem;
+  border-block-start: 1px solid var(--rule);
+}
+.cred {
+  padding: 2.4rem 1.9rem;
+  border-inline-start: 1px solid var(--rule);
+}
+.cred:first-child { border-inline-start: 0; }
+
+.cred-mark {
+  display: block;            /* span پیش‌فرض inline است و ابعاد را نمی‌پذیرد */
+  position: relative;
+  width: 88px;
+  height: 88px;
+  margin-block-end: 1.3rem;
+  border: 2px solid var(--yellow);
+  border-radius: 50%;
+  overflow: hidden;
+}
+/* نشان‌های رسمی JPG با پس‌زمینهٔ سفیدند. سفیدی روی خودِ تصویر می‌نشیند نه
+   روی حلقه — پس اگر فایلی نرسد، حلقه خالی می‌ماند نه یک دیسک سفید تهی.
+   موقعیت absolute عمدی است: درصدِ ارتفاع داخل grid قابل اتکا نیست. */
+.cred-mark img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 8px;
+  background: #fff;
+}
+
+.cred h3 {
+  font-size: 1.08rem;
+  font-weight: 500;
+  margin-block-end: .8rem;
+}
+.cred-latin {
+  font-size: .72rem;
+  letter-spacing: .1em;
+  color: var(--muted);
+  margin-inline-start: .4rem;
+}
+.cred p { font-size: .96rem; color: var(--muted); }
+.cred-meta {
+  margin-block-start: .9rem;
+  font-size: .85rem !important;
+  padding-block-start: .9rem;
+  border-block-start: 1px solid var(--rule);
+}
+
+/* ---------- ۱۲. تماس ---------- */
+
+/* زاویهٔ نوار نور. ثبت با @property لازم است تا مرورگر بتواند «زاویه» را
+   انیمیت کند؛ وگرنه فقط یک عدد بی‌معنی است و انیمیشن کار نمی‌کند. */
+@property --beam-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* قاب تماس: نوار نور زرد مدام دور قاب می‌چرخد.
+   الگو از Border Beam Panel در 21st.dev، ولی به‌جای چرخاندن با جاواسکریپت
+   (۶۰ بار در ثانیه) با @property و انیمیشن CSS چرخانده می‌شود. */
+.contact-frame {
+  position: relative;
+  isolation: isolate;
+  margin-block-start: 3.4rem;
+  padding: clamp(2.4rem, 6vw, 4.4rem) 1.6rem;
+  /* خط پایه تا وقتی نور آن‌طرف قاب است، لبه گم نشود */
+  border: 1px solid rgba(255, 255, 255, .22);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.beam-ring,
+.beam-glow,
+.beam-glow > span {
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+}
+
+.beam-ring,
+.beam-glow > span {
+  inset: 0;
+  /* اگر مرورگری @property را نشناسد، این مقدار ثابت می‌ماند و نور نمی‌چرخد
+     ولی قاب سالم می‌ماند */
+  --beam-angle: 0deg;
+  background: conic-gradient(from var(--beam-angle),
+    transparent 0deg,
+    rgba(255, 212, 0, .04) 18deg,
+    rgba(255, 212, 0, .55) 46deg,
+    var(--yellow) 56deg,
+    #fff 60deg,
+    transparent 64deg,
+    transparent 198deg,
+    rgba(255, 255, 255, .04) 216deg,
+    rgba(255, 255, 255, .45) 244deg,
+    #fff 256deg,
+    transparent 260deg,
+    transparent 360deg);
+  animation: beam-spin 9s linear infinite;
+}
+
+/* فقط نوار باریک لبه دیده شود: دو ماسک روی هم که وسطشان را برمی‌دارند */
+.beam-ring,
+.beam-glow > span {
+  padding: 2px;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+}
+
+/* همان حلقه، تار و کم‌رنگ، پشت قاب — مثل نوری که روی دیوار می‌افتد.
+   تاری روی عنصر بیرونی است نه خود حلقه: در CSS اول فیلتر اعمال می‌شود و بعد
+   ماسک، پس اگر هر دو روی یک عنصر باشند، نورِ تار سرِ ماسک بریده می‌شود و
+   به‌جای هاله، از وسط قاب رد می‌شود. */
+.beam-glow {
+  z-index: -1;
+  filter: blur(15px);
+  opacity: .5;
+}
+
+/* وقتی بخش تماس از دید خارج است، چرخش بی‌دلیل ادامه ندهد */
+.contact-frame.is-paused .beam-ring,
+.contact-frame.is-paused .beam-glow { animation-play-state: paused; }
+
+@keyframes beam-spin { to { --beam-angle: 360deg; } }
+
+.contact-kicker {
+  max-width: 40ch;
+  color: rgba(255, 255, 255, .90);
+}
+
+/* نشان رسمی شماره، به‌جای دایره و عدد تایپی */
+.contact-mark {
+  display: block;
+  width: clamp(230px, 44vw, 420px);
+  margin-block: clamp(2rem, 5vw, 3rem);
+  transition: transform .25s var(--ease), filter .25s var(--ease);
+}
+.contact-mark img { width: 100%; height: auto; }
+.contact-mark:hover {
+  transform: scale(1.03);
+  filter: drop-shadow(0 0 18px rgba(255, 212, 0, .45));
+}
+
+.contact-claim {
+  font-size: clamp(1.15rem, 2.6vw, 1.5rem);
+  font-weight: 300;
+}
+
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .9rem;
+  margin-block-start: 2rem;
+}
+
+.copy-status {
+  min-height: 1.7rem;
+  margin-block-start: .9rem;
+  font-size: .92rem;
+  color: var(--yellow);
+}
+
+/* ---------- ۱۳. شعبه‌ها ---------- */
+
+.branch-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3.4rem;
+  align-items: start;
+  margin-block-start: 3.4rem;
+}
+
+.branch-list { border-block-start: 1px solid var(--rule); }
+.branch {
+  padding-block: 1.9rem;
+  border-block-end: 1px solid var(--rule);
+}
+.branch h3 { font-size: 1.1rem; font-weight: 500; }
+.branch p {
+  margin-block-start: .5rem;
+  max-width: var(--measure);
+  color: var(--muted);
+  font-size: .98rem;
+}
+.branch-link,
+.branch-go summary {
+  display: inline-block;
+  margin-block-start: .9rem;
+  font-size: .93rem;
+  font-weight: 500;
+  padding-block-end: .2rem;
+  border-block-end: 2px solid var(--yellow);
+}
+.branch-link:hover,
+.branch-go summary:hover { color: var(--teal); }
+
+/* دکمهٔ مسیریابی که با کلیک دو گزینه می‌دهد: نشان یا گوگل‌مپ.
+   با <details> ساخته شده، پس بدون JS هم باز و بسته می‌شود. */
+.branch-go {
+  position: relative;
+  width: fit-content;
+}
+.branch-go summary {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  cursor: pointer;
+  list-style: none;          /* مثلث پیش‌فرض فایرفاکس */
+}
+.branch-go summary::-webkit-details-marker { display: none; }   /* مثلث پیش‌فرض سافاری */
+
+/* فلش کوچک که با باز شدن منو برمی‌گردد */
+.branch-go summary::after {
+  content: "";
+  width: .4em;
+  height: .4em;
+  margin-block-end: .25em;
+  border-inline-end: 2px solid currentColor;
+  border-block-end: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform .2s var(--ease);
+}
+.branch-go[open] summary::after { transform: rotate(-135deg) translate(-.12em, -.12em); }
+
+.branch-go-menu {
+  position: absolute;
+  z-index: 20;
+  inset-inline-start: 0;
+  inset-block-start: calc(100% + .5rem);
+  min-width: 11rem;
+  display: grid;
+  background: #fff;
+  border: 1px solid var(--rule-light);
+  box-shadow: 0 16px 32px -16px rgba(1, 28, 61, .45);
+}
+.branch-go-menu a {
+  padding: .7rem 1rem;
+  font-size: .95rem;
+  transition: background-color .15s var(--ease), color .15s var(--ease);
+}
+.branch-go-menu a + a { border-block-start: 1px solid var(--rule-light); }
+.branch-go-menu a:hover {
+  background: rgba(2, 55, 109, .06);
+  color: var(--teal);
+}
+
+.branch-map {
+  height: 100%;
+  min-height: 420px;
+  border: 1px solid var(--rule);
+}
+.branch-map iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  border: 0;
+  /* فیلتر سیاه‌وسفید عمداً برداشته شد: پین قرمز محل فروشگاه هم خاکستری
+     می‌شد و از پین‌های دیگر نقشه قابل تشخیص نبود. */
+}
+
+/* ---------- ۱۴. فوتر ---------- */
+
+.site-footer {
+  background: var(--ink);
+  color: #fff;
+  padding-block: clamp(48px, 6vw, 76px) 34px;
+  --muted: var(--mist);
+  --rule: var(--rule-dark);
+  --focus: var(--yellow);
+}
+
+.footer-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+  padding-block-end: 2.4rem;
+  border-block-end: 1px solid var(--rule);
+}
+
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+  text-align: start;
+}
+.footer-contact a {
+  font-size: 1.35rem;
+  font-weight: 500;
+  color: var(--yellow);
+}
+.footer-contact span {
+  font-size: .92rem;
+  color: var(--muted);
+  max-width: 40ch;
+}
+
+/* نوار نام برندها — تک‌رنگ سفید، مثل پشت جلد بروشور */
+.footer-brands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .9rem 2.1rem;
+  padding-block: 2.2rem;
+  border-block-end: 1px solid var(--rule);
+}
+.footer-brands li {
+  font-size: .93rem;
+  color: rgba(255, 255, 255, .78);
+}
+.footer-brands a:hover { color: #fff; }
+
+.footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block-start: 2rem;
+  font-size: .88rem;
+  color: var(--muted);
+}
+
+.footer-social {
+  display: flex;
+  gap: 1rem;
+}
+.footer-social a {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  transition: border-color .18s var(--ease), color .18s var(--ease);
+}
+.footer-social a:hover { border-color: var(--yellow); color: var(--yellow); }
+.footer-social svg { width: 18px; height: 18px; fill: currentColor; }
+
+/* ==========================================================================
+   ۱۵. ریسپانسیو — بریک‌پوینت ۱۰۲۴ و ۶۴۰
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+
+  .about-grid { gap: 2.6rem 2.6rem; }
+
+  .branch-layout { grid-template-columns: 1fr; }
+  .branch-map, .branch-map iframe { min-height: 320px; }
+
+  .cred-list { grid-template-columns: 1fr; }
+  .cred {
+    border-inline-start: 0;
+    border-block-end: 1px solid var(--rule);
+    padding-inline: 0;
+  }
+
+  /* ردیف برند هنوز سه‌ستونه است؛ جعبهٔ لوگو کوچک‌تر تا متن تنگ نشود */
+  .brand-logo { --logo-w: 120px; --logo-h: 56px; }
+
+  /* کپسول تقریباً تمام‌عرض. max-width بالای صفحه ۱۰۰٪ است نه ۱۱۸۰px،
+     وگرنه جمع شدن تا آخرِ انیمیشن عقب می‌افتاد و یک‌باره می‌پرید. */
+  .site-header .header-inner { max-width: 100%; }
+  .site-header.is-floating .header-inner { max-width: calc(100% - 24px); }
+
+  /* منوی همبرگری تمام‌صفحه */
+  .nav-toggle {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    z-index: 120;
+    color: #fff;
+    border-radius: 50%;
+  }
+  .nav-toggle-bars,
+  .nav-toggle-bars::before,
+  .nav-toggle-bars::after {
+    content: "";
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: currentColor;
+    transition: transform .22s var(--ease), opacity .22s var(--ease);
+  }
+  .nav-toggle-bars::before { transform: translateY(-7px); }
+  .nav-toggle-bars::after  { transform: translateY(5px); }
+
+  .nav-toggle[aria-expanded="true"] .nav-toggle-bars { background: transparent; }
+  .nav-toggle[aria-expanded="true"] .nav-toggle-bars::before { transform: rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] .nav-toggle-bars::after  { transform: rotate(-45deg); }
+
+  .site-nav {
+    position: fixed;
+    inset: 0;
+    z-index: 110;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2.6rem;
+    background: var(--navy);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .22s var(--ease), visibility .22s var(--ease);
+  }
+  .site-nav.is-open { opacity: 1; visibility: visible; }
+
+  .site-nav > ul {
+    flex-direction: column;
+    gap: 1.7rem;
+    text-align: center;
+  }
+  .site-nav > ul a { font-size: 1.28rem; }
+
+  /* در منوی تمام‌صفحه نشانگر لغزان معنی ندارد */
+  .nav-cursor { display: none; }
+  .site-nav > ul a.is-under-cursor { color: inherit; }
+}
+
+@media (max-width: 640px) {
+
+  body { font-size: 16px; }
+
+  .wrap { padding-inline: 18px; }
+
+  .brandmark-logo { height: 40px; }
+
+  .hero { min-height: 88vh; }
+  .hero-actions { width: 100%; }
+  .hero-actions .btn { flex: 1 1 auto; }
+
+  .about-grid { grid-template-columns: 1fr; gap: 2.4rem; }
+
+  .stats { grid-template-columns: 1fr; }
+  .stat {
+    border-inline-start: 0;
+    border-block-end: 1px solid var(--rule);
+    padding-inline: 0;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.2rem;
+  }
+  .stat dd { font-size: 1.7rem; }
+
+  /* ردیف برند عمودی: لوگو بالا، خط رنگی به لبهٔ بالایی */
+  .brand-row {
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+    padding: 1.7rem 0 1.9rem;
+    box-shadow: inset 0 3px 0 0 var(--brand-color);
+    padding-block-start: 1.9rem;
+  }
+  .brand-row:hover { box-shadow: inset 0 5px 0 0 var(--brand-color); }
+  .brand-links { flex-wrap: wrap; gap: 1rem 1.4rem; }
+
+  .contact-frame { padding-inline: 1.1rem; }
+
+  .footer-bottom { flex-direction: column; align-items: flex-start; }
+}
+
+/* ---------- ۱۶. کاهش حرکت ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
